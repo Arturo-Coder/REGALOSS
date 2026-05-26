@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ximena | XVII</title>
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;1,400&family=Montserrat:wght@100;300;400&display=swap');
+
+        :root {
+            --gold: #b8924e;
+            --dark: #050505;
+            --soft-white: #f1f1f1;
+            --grey-coord: rgba(255,255,255,0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+
+        body {
+            background-color: var(--dark);
+            color: var(--soft-white);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Contenedor de Pétalos */
+        #petals-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle, #111 0%, #000 100%);
+        }
+
+        .hero h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 10vw, 5rem);
+            letter-spacing: 25px;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        /* Sección Mapa Estelar */
+        .star-map-section {
+            text-align: center;
+            padding: 100px 20px;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+        }
+
+        .star-map-circle {
+            width: 300px;
+            height: 300px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            margin: 40px auto;
+            position: relative;
+            background: url('mapa.png'); 
+            background-size: cover;
+            box-shadow: 0 0 50px rgba(184, 146, 78, 0.2);
+        }
+
+        .star-map-info {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            color: var(--gold);
+        }
+
+        /* Regalos */
+        .content { max-width: 1000px; margin: 0 auto; padding: 100px 20px; }
+
+        .gift-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 250px;
+            gap: 60px;
+        }
+
+        .gift-item:nth-child(even) { flex-direction: row-reverse; }
+
+        .gift-image { flex: 1; filter: grayscale(100%); transition: 1s; }
+        .gift-image:hover { filter: grayscale(0%); }
+        .gift-image img { width: 100%; border: 1px solid rgba(184, 146, 78, 0.1); }
+
+        .gift-info { flex: 1; position: relative; }
+         
+        .coords {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            color: var(--grey-coord);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .gift-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.6rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .gift-description {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            font-style: italic;
+            color: #d1d1d1;
+        }
+
+        /* SECCIÓN EL REFUGIO */
+        .refugio-section {
+            padding: 150px 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, #050505, #000);
+            border-top: 1px solid rgba(184, 146, 78, 0.05);
+        }
+
+        .refugio-title {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            letter-spacing: 12px;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .coord-card {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 40px 20px;
+            border: 1px solid rgba(184, 146, 78, 0.1);
+            transition: all 0.6s ease;
+        }
+
+        .coord-card:hover {
+            border-color: var(--gold);
+            background: rgba(184, 146, 78, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .coord-val {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+
+        .coord-desc {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #bbb;
+            margin-top: 15px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .footer-note {
+            text-align: center;
+            padding: 150px 20px;
+            background: #000;
+        }
+
+        .footer-note h3 {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 10px;
+            font-size: 0.8rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .footer-note p {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.8rem;
+            color: var(--soft-white);
+        }
+
+        .petal {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50% 0 50% 50%;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="petals-container"></div>
+
+    <section class="hero">
+        <div data-aos="fade-up" data-aos-duration="3000">
+            <h1>XIMENA</h1>
+            <p>13.09.2025 — MONACO</p>
+        </div>
+    </section>
+
+    <section class="star-map-section" data-aos="fade-in">
+        <div class="star-map-info">EL CIELO QUE NOS VIO ESA NOCHE</div>
+        <div class="star-map-circle"></div>
+        <p style="font-family: 'Playfair Display'; font-style: italic; font-size: 0.9rem; opacity: 0.5;">
+            "Las estrellas nunca vuelven a estar en la misma posición, <br> pero mi mente siempre regresa a este lugar."
+        </p>
+    </section>
+
+    <div class="content">
+
+        <div class="gift-item" data-aos="fade-up">
+            <div class="gift-image"><img src="https://valentino-cdn.thron.com/delivery/public/image/valentino/46bcd651-a882-4a49-8e47-8562d3118543/ihqstx/std/1536x0/CREPE-COUTURE-EMBROIDERED-MIDI-DRESS?quality=80&size=35&format=auto" alt="Valentino"></div>
+            <div class="gift-info">
+                <span class="coords">43.7391° N, 7.4273° E · Place du Casino</span>
+                <h2 class="gift-title">1. EL VESTIDO VALENTINO</h2>
+                <p class="gift-description">"Lo elegí porque tiene esa elegancia que no hace ruido, la misma que tú tienes al caminar. Te lo mando porque me rompe el alma saber que habrá mil ojos mirándote cuando lo uses, pero ninguno de esos ojos va a saber leer tu historia como lo hacían los míos este es el vestido con el que te soñe literalmente es como si estaba destinado para ti cuando lo vi te vi llevandolo puesto yo llegando a recogerte con un ramo de tulipanes y diciendote lo hermosa que eres y que si estabas lista para hacer historia fue tan real recuerda que ante mis ojos nunca hubo nadie mas que se viera implacable que tu."</p>
+            </div>
+        </div>
+
+        <div class="gift-item" data-aos="fade-up">
+            <div class="gift-image"><img src="https://madisonavenuecouture.com/cdn/shop/files/H-K-251105-2-01-01.jpg?v=1765321609" alt="Hermès"></div>
+            <div class="gift-info">
+                <span class="coords">43.7396° N, 7.4281° E · Hôtel de Paris</span>
+                <h2 class="gift-title">2. EL KELLY DE HERMÈS</h2>
+                <p class="gift-description">"Este bolso es lo mismo lo vi y supe que estaba destinado a ti que era para ti tiene ese tono crema porque es puro como lo que sentí por ti desde el primer momento que te vi ese amor tan puro y real que se vuelve especial 
+                Es pequeño pero es para que lo lleves y guardes todas las aventuras las anécdotas que tengas"</p>
+            </div>
+        </div>
+
+        <div class="gift-item" data-aos="fade-up">
+            <div class="gift-image"><img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSYFb9kYe6jrx4uZHi7CZq9c3h4cBqXhGgNI3KFFwiApizs4DwP1gZzOHV_JxcKNAXP3r-H4dh3e_5etX4PdUdJqLHu_B6Xpw" alt="Loro Piana"></div>
+            <div class="gift-info">
+                <span class="coords">43.7302° N, 7.4244° E · Jardines Saint-Martin</span>
+                <h2 class="gift-title">3. LA CAPA LORO PIANA</h2>
+                <p class="gift-description">"Este lo elegí con ayuda de la esposa de max y es para que te abrace ya que yo nunca pude hacerlo esta capa es mi abrazo el que no te di la última vez, el que me guardé por orgullo o por miedo quiero que cuando sientas el frio de la noche te envuelvas en esta capa y sientas que de alguna forma siempre voy a estar para cuidarte y protegerte de tus mayores pesadillas de tus mayores enemigos siempre te voy a cuidar como siempre quise hacerlo"</p>
+            </div>
+        </div>
+
+        <div class="gift-item" data-aos="fade-up">
+            <div class="gift-image"><img src="https://b2c-media.maxmara.com/sys-master/m0/MM/2026/1/1011116106/035/s3details/1011116106035-b-mxmprugna_normal.webp" alt="Max Mara"></div>
+            <div class="gift-info">
+                <span class="coords">43.7388° N, 7.4289° E · Opéra de Monte-Carlo</span>
+                <h2 class="gift-title">4. EL ABRIGO MAX MARA</h2>
+                <p class="gift-description">"Lo elegí para que sea tu refugio. Me da miedo que alguien más intente cuidarte y no sepa hacerlo como tú te mereces. Es una pieza eterna, como el amor que te tengo, ese que no se desgasta por más inviernos que pasen sobre nosotros 4.  Este es uno que dura para siempre igual que el respeto y el amor que te tengo lo compre pensando en que te acompañe durante años porque, aunque el tiempo pase y nuestras vidas estén en caminos distintos mi deseo de que te sientas bien y protegida no va a caducar nunca al igual que mi amor por ti."</p>
+            </div>
+        </div>
+
+        <div class="gift-item" data-aos="fade-up">
+            <div class="gift-image"><img src="https://us.christianlouboutin.com/media/catalog/product/cache/c8e9b72c512eaa31cd76a11d9f425a9e/3/1/3191451pk1a-3191451pk1a-hover_image-ecommerce-" alt="Louboutin"></div>
+            <div class="gift-info">
+                <span class="coords">43.7342° N, 7.4225° E · Port Hercule</span>
+                <h2 class="gift-title">5. 5.    Zapatos de Tacón Kate Louboutin</h2>
+                <p class="gift-description">"Estos son para que sigas caminado por esto que se llama vida y sigas pisando fuerte para que cada paso que des hacia esa nueva vida con esa seguridad de una mujer fuerte y valiente tu sabes perfectamente siempre voy a admirar tu camino y cada paso que des recuerda que soy tu fan numero #1"</p>
+            </div>
+        </div>
+
+        <div class="gift-item" data-aos="fade-up">
+            <div class="gift-image"><img src="https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dw9a1833b1/images/large/854f564099e85ed7a2b63d28669c77cf.png?sw=750&sh=750&sm=fit&sfrm=png" alt="Cartier"></div>
+            <div class="gift-info">
+                <span class="coords">43.7389° N, 7.4278° E · Avenue de Monte-Carlo</span>
+                <h2 class="gift-title">6. LA PULSERA LOVE DE CARTIER</h2>
+                <p class="gift-description">"Tú sabes lo que significa esta pulsera: un amor que se cierra con un tornillo, que no se quita fácilmente. La elegí con diamantes porque tú eres la luz que brilló en mi oscuridad. Aunque hoy la llave no esté en mi bolsillo, el compromiso de mi corazón contigo sigue atornillado a mi alma tú tienes la llave, Xime. Literal y figuradamente. Mi corazón se quedó cerrado el día que te fuiste y no he encontrado forma de abrirlo para nadie más. Llévala siempre contigo; es el sello de un compromiso que sigue siendo mi verdad."</p>
+            </div>
+        </div>
+
+        <div class="gift-item" data-aos="fade-up">
+            <div class="gift-image"><img src="https://www.vancleefarpels.com/content/dam/rcq/vca/Qh/lt/Tc/sM/Qm/Wn/FX/zy/T5/m9/aw/QhltTcsMQmWnFXzyT5m9aw.png.transform.vca-w820-1x.png" alt="Van Cleef"></div>
+            <div class="gift-info">
+                <span class="coords">43.7395° N, 7.4277° E · Café de Paris</span>
+                <h2 class="gift-title">7. 7. Collar Vintage Alhambra – Van Cleef & Arpels</h2>
+                <p class="gift-description">"El trébol simboliza la buena fortuna. Y esa fue mi mayor suerte: haber coincidido contigo. Te lo envío en oro blanco porque es discreto y eterno, como ese amor que no necesita gritar para saber que existe. Gracias por haber sido mi amuleto durante todo este tiempo mi amuleto de la suerte este lo compré en Japón justo después de la masterclass que di gracias a tu buena suerte y esos mensajes que me motivaban como nunca."</p>
+            </div>
+        </div>
+
+        <div class="gift-item" data-aos="fade-up">
+            <div class="gift-image"><img src="https://i.ebayimg.com/images/g/bbIAAeSwpLhpzIMh/s-l1600.webp" alt="Messika"></div>
+            <div class="gift-info">
+                <span class="coords">43.7445° N, 7.4331° E · Larvotto Beach</span>
+                <h2 class="gift-title">8. LOS PENDIENTES MESSIKA</h2>
+                <p class="gift-description">"Me encanta este diseño de los pendientes porque el diamante se mueve libremente, pero nunca se sale de su lugar. Así me siento yo: libre de seguir mi carrera libre de seguir mi aventura tratando de conquistar este mundo y luchar por la f1, pero siempre moviéndome alrededor del recuerdo de ese recuerdo tuyo. Llévalos cerca de tu rostro para que iluminen tus hermosos ojos, haz que esos hermosos ojos brillen como nunca hoy esos que todavía veo cuando cierro los míos."</p>
+            </div>
+        </div>
+
+        <div class="gift-item" data-aos="fade-up">
+            <div class="gift-image"><img src="https://www.jenniferbehr.com/cdn/shop/files/77BC5-crystal-web-4_0431652e-26dc-4327-b88e-7f997ebb63a5.webp?v=1769122468&width=1440" alt="Jennifer Behr"></div>
+            <div class="gift-info">
+                <span class="coords">43.7311° N, 7.4209° E · Palais Princier</span>
+                <h2 class="gift-title">9. LA DIADEMA DE JENNIFER BEHR</h2>
+                <p class="gift-description">"Para el mundo eres Ximena, pero para mí siempre fuiste la dueña de todo. Esta diadema es tu corona. Te la mando porque, sin importar quién llegue después o a dónde me lleve el automovilismo, en el reino de mi vida, tú siempre vas a tener el lugar más alto eres la reina de este imperio"</p>
+            </div>
+        </div>
+
+        <div class="gift-item" data-aos="fade-up">
+            <div class="gift-image"><img src="https://www.elpalaciodehierro.com/dw/image/v2/BDKB_PRD/on/demandware.static/-/Sites-palacio-master-catalog/default/dwefacdc73/images/43118173/large/43118173_x1.jpg?sw=960&sh=1152" alt="Perfume Valaya"></div>
+            <div class="gift-info">
+                <span class="coords">43.7432° N, 7.4308° E · Jardin Japonais</span>
+                <h2 class="gift-title">10. EL PERFUME VALAYA</h2>
+                <p class="gift-description">"Este es el regalo más difícil. Cuando lo uses, el aire me va a recordar a ti y me va a doler respirar. Te lo mando porque no quiero saber cual es tu ecencia y si el viento me trae un aroma familiar, sabre que eres tu."</p>
+            </div>
+        </div>
+
+        <div class="gift-item" data-aos="fade-up">
+            <div class="gift-image"><img src="https://floryou.com.mx/florerias-en-queretaro/wp-content/uploads/sites/3/2024/01/FYQ-008-Ramo-de-rosas-pasion.webp" alt="Rosas Rojas"></div>
+            <div class="gift-info">
+                <span class="coords">43.7311° N, 7.4209° E · Palais Princier</span>
+                <h2 class="gift-title">11. TUS FLORES FAVORITAS: ROSAS ROJAS</h2>
+                <p class="gift-description">"Tenía que empezar por aquí. Y no hablo de un ramo común, Xime; te mando miles de ellas, tantas que no vas a saber ni dónde ponerlas. Las elegí así, exageradas y desmedidas, porque solo una cantidad tan absurda de rosas puede representar lo enorme que sigue siendo lo que siento por ti. Te sigo amando con esa misma fuerza, sin límites."</p>
+            </div>
+        </div>
+
+        <div class="gift-item" data-aos="fade-up">
+            <div class="gift-image"><img src="https://rosesandgifts.com/wp-content/uploads/2024/11/WhatsApp-Image-2024-11-30-at-12.13.35-PM.jpeg" alt="Gerberas"></div>
+            <div class="gift-info">
+                <span class="coords">43.7311° N, 7.4209° E · Palais Princier</span>
+                <h2 class="gift-title">12. GERBERAS</h2>
+                <p class="gift-description">"Muchas gerberas también, una montaña de ellas que llene de color cada rincón donde estés. Te las envío porque un simple ramo se quedaría corto para recordar la luz que le dabas a mis días. Aunque hoy no este contigo, quería que te inundara el aroma de ese amor que siento por ti, porque para mí nada se ha borrado y te sigo extrañando igual."</p>
+            </div>
+        </div>
+
+        <div class="gift-item" data-aos="fade-up">
+            <div class="gift-image"><img src="https://galeriafloralqro.com/wp-content/uploads/2023/01/IMG_20190109_151138053-EFFECTS.jpg" alt="Tulipanes"></div>
+            <div class="gift-info">
+                <span class="coords">43.7311° N, 7.4209° E · Palais Princier</span>
+                <h2 class="gift-title">13. TULIPANES</h2>
+                <p class="gift-description">"Por último, tus favoritos. Un día me dijiste, que te gustaban. Quizá tú lo olvidaste, pero yo guardo cada detalle tuyo grabado en el alma. No te mando un ramo, te mando todos los tulipanes que pude encontrar, una marea de ellos, como una prueba real de que sigo amándote en cada pequeño recuerdo."</p>
+            </div>
+        </div>
+
+        <div class="gift-item" data-aos="fade-up">
+            <div class="gift-image"><img src="https://m.media-amazon.com/images/I/71RdWJMD4yL._AC_SX679_.jpg" alt="Gerberas"></div>
+            <div class="gift-info">
+                <span class="coords">43.7311° N, 7.4209° E · Palais Princier</span>
+                <h2 class="gift-title">Diamond painting</h2>
+                <p class="gift-description">"Y no menos importante aquello que alguna vez me dijiste que te gustaba y te relajaba te compre muchos tantos para que simpre estes relajada y porque no feliz al final de el dia simpre quiero veerte feliz esa simpre fue mi pioridad"</p>
+            </div>
+        </div>
+
+    </div>
+
+    <section class="refugio-section" data-aos="fade-up">
+        <h2 class="refugio-title">EL REFUGIO</h2>
+        
+        <div style="max-width: 800px; margin: 0 auto 80px; text-align: center; padding: 0 25px;">
+            <p style="font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--gold); letter-spacing: 5px; text-transform: uppercase; margin-bottom: 30px; opacity: 0.8;">
+                Protocolo de Extracción // Frecuencia Privada
+            </p>
+            <p style="font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.2rem; line-height: 2; color: #e0e0e0; position: relative;">
+                <span style="font-size: 3rem; position: absolute; left: -20px; top: -20px; opacity: 0.2; color: var(--gold);">"</span>
+                He marcado estos sectores en el mapa no como destinos, sino como <strong>'puntos de extracción'</strong>. Si la vida se vuelve una carrera que no quieres correr, usa estas coordenadas (EJEMPLO: 43.725233, 7.418821 LAS ESCONDI EN ESTA CARTA PARA QUE ENCUENTRES ESE DESTINO DEL SECTOR PEGALAS EN TU APLICACION DE MAPS). Son el único lugar donde el piloto se baja del auto y vuelve a ser el Arturo que conociste. Si decides buscarme, no mires las estrellas; mira el suelo que piso cada dia. Ahí dejé la llave de lo que no se pudo decir. Te espero en la meta, aunque la meta sea volver al principio.
+                <span style="font-size: 3rem; position: absolute; right: -20px; bottom: -40px; opacity: 0.2; color: var(--gold);">"</span>
+            </p>
+        </div>
+
+        <div class="map-grid">
+            <div class="coord-card">
+                <span class="coord-val">43.725648, 7.418011</span>
+                <p class="coord-desc"><strong>Sector Alpha: Le Palazzo</strong><br>El umbral de mi privacidad. Donde el mundo exterior se apaga y guardo lo que realmente importa.</p>
+            </div>
+            <div class="coord-card">
+                <span class="coord-val">43.725233, 7.418821</span>
+                <p class="coord-desc"><strong>Sector Bravo: El Punto de Calma</strong><br>Donde el Mediterráneo me dicta las respuestas. Aquí centro mis ideas cuando el ruido es demasiado fuerte.</p>
+            </div>
+            <div class="coord-card">
+                <span class="coord-val">43.725454, 7.418649</span>
+                <p class="coord-desc"><strong>Sector Charlie: Vía de Pensamientos</strong><br>Pasos lentos para una mente que siempre va rápido. El lugar donde mis ideas toman forma.</p>
+            </div>
+            <div class="coord-card">
+                <span class="coord-val">43.725264, 7.417005</span>
+                <p class="coord-desc"><strong>Sector Delta: El Sendero</strong><br>La calle que recorro cuando no busco llegar a ningún lado, solo perderme en lo que alguna vez fuimos.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="footer-note" data-aos="fade-in">
+        <h3>XVII · MONACO · MÉXICO</h3>
+        <p>Siempre tuyo, Arturo.</p>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1500 });
+
+        const container = document.getElementById('petals-container');
+        for (let i = 0; i < 35; i++) {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.width = Math.random() * 10 + 5 + 'px';
+            petal.style.height = petal.style.width;
+            petal.style.animationDuration = Math.random() * 5 + 7 + 's';
+            petal.style.animationDelay = Math.random() * 5 + 's';
+            container.appendChild(petal);
+        }
+    </script>
+</body>
+</html>
